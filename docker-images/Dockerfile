@@ -22,7 +22,7 @@ WORKDIR /app
 ENV PYTHONPATH=/app
 
 # Move the base entrypoint to reuse it
-RUN ls
+RUN pwd && ls
 RUN mv /entrypoint.sh /uwsgi-nginx-entrypoint.sh
 # Copy the entrypoint that will generate Nginx additional configs
 COPY entrypoint.sh /entrypoint.sh
