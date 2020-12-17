@@ -1,9 +1,12 @@
+### This image is built to run on s390x architecture.
+-    [build source](https://github.com/YBA-IBM/docker-brew-ubuntu-core) 
+-    [original source code](https://github.com/tianon/docker-brew-ubuntu-core)
 
 # uwsgi-nginx-flask
 
 # Tags
 
-* [`python3.9`, `latest` _(Dockerfile)_](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/docker-images/python3.8.dockerfile)
+-   [`python3.9`]
 
 
 ## Description
@@ -12,74 +15,29 @@ This [**Docker**](https://www.docker.com/) image allows you to create [**Flask**
 
 The combination of uWSGI with Nginx is a [common way to deploy Python Flask web applications](http://flask.pocoo.org/docs/1.0/deploying/uwsgi/). It is widely used in the industry and would give you decent performance. (*)
 
-### * Note on performance and features
-
-If you are starting a new project, you might benefit from a newer and faster framework based on ASGI instead of WSGI (Flask and Django are WSGI-based).
-
-You could use an ASGI framework like:
-
-* [**FastAPI**](https://github.com/tiangolo/fastapi) (which is based on Starlette) with this Docker image: [**tiangolo/uvicorn-gunicorn-fastapi**](https://github.com/tiangolo/uvicorn-gunicorn-fastapi-docker).
-* [**Starlette**](https://github.com/encode/starlette) directly, with this Docker image: [**tiangolo/uvicorn-gunicorn-starlette**](https://github.com/tiangolo/uvicorn-gunicorn-starlette-docker).
-
-FastAPI, or Starlette, would give you about 800% (8x) the performance achievable with Flask using this image (**tiangolo/uwsgi-nginx-flask**). [You can see the third-party benchmarks here](https://www.techempower.com/benchmarks/#section=test&runid=a979de55-980d-4721-a46f-77298b3f3923&hw=ph&test=fortune&l=zijzen-7).
-
-Also, if you want to use new technologies like WebSockets it would be easier (and *possible*) with a newer framework based on ASGI, like FastAPI or Starlette. As the standard ASGI was designed to be able to handle asynchronous code like the one needed for WebSockets.
-
-#### If you need Flask
-
-If you need to use Flask (instead of something based on ASGI) and you need to have the best performance possible, you can use the alternative image: [**tiangolo/meinheld-gunicorn-flask**](https://github.com/tiangolo/meinheld-gunicorn-flask-docker).
-
-**tiangolo/meinheld-gunicorn-flask** will give you about 400% (4x) the performance of this image (**tiangolo/uwsgi-nginx-flask**).
-
-It is very similar to **tiangolo/uwsgi-nginx-flask**, so you can still use many of the ideas described here.
-
----
-
-## Examples (simple project templates)
-
-* **`python3.8`** tag: general Flask web application:
-
-[**example-flask-python3.8.zip**](https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/1.4.0/example-flask-python3.8.zip)
-
-* **`python3.8`** tag: general Flask web application, structured as a package, for bigger Flask projects, with different submodules. Use it only as an example of how to import your modules and how to structure your own project:
-
-[**example-flask-package-python3.8.zip**](https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/1.4.0/example-flask-package-python3.8.zip)
-
-* **`python3.8`** tag: `static/index.html` served directly in `/`, e.g. for [Vue](https://vuejs.org/), [React](https://reactjs.org/), [Angular](https://angular.io/), or any other Single-Page Application that uses a static `index.html`, not modified by Python:
-
-[**example-flask-python3.8-index.zip**](https://github.com/tiangolo/uwsgi-nginx-flask-docker/releases/download/1.4.0/example-flask-python3.8-index.zip)
-
 ## General Instructions
 
 You don't have to clone this repo, you should be able to use this image as a base image for your project with something in your `Dockerfile` like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.8
+FROM quay.io/ibm/uwsgi-nginx-flask:python3.9
 
 COPY ./app /app
 ```
 
-There are several image tags available for Python 3.6 and above, and Python 2.7, but for new projects you should use the latest version available.
-
 As of now, [everyone](https://www.python.org/dev/peps/pep-0373/) [should be](http://flask.pocoo.org/docs/0.12/python3/#python3-support) [using **Python 3**](https://docs.djangoproject.com/en/1.11/faq/install/#what-python-version-should-i-use-with-django). And [Python 2.7 has reached its end of life](https://www.python.org/doc/sunset-python-2/).
-
-There are several template projects that you can download (as a `.zip` file) to bootstrap your project in the section "**Examples (project templates)**" above.
-
-This Docker image is based on [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/). That Docker image has uWSGI and Nginx installed in the same container and was made to be the base of this image.
 
 ## Quick Start
 
-**Note**: You can download the **example-flask-python3.8.zip** project example and use it as the template for your project from the section **Examples** above.
-
 ---
 
-Or you may follow the instructions to build your project from scratch:
+You may follow the instructions to build your project from scratch:
 
 * Go to your project directory
 * Create a `Dockerfile` with:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx-flask:python3.8
+FROM quay.io/ibm/uwsgi-nginx-flask:python3.9
 
 COPY ./app /app
 ```
@@ -253,8 +211,6 @@ In this scenario, you would have 3 Docker containers:
 If you want to check the previous (deprecated) documentation on adding a frontend to the same container, you can [read the deprecated guide for single page apps](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/deprecated-single-page-apps-in-same-container.md).
 
 ## Quick Start for bigger projects structured as a Python package
-
-**Note**: You can download the **example-flask-package-python3.8.zip** project example and use it as an example or template for your project from the section **Examples** above.
 
 ---
 
@@ -582,7 +538,7 @@ The number connections per Nginx worker cannot exceed the limit on the maximum n
 You can change the limit of open files with the environment variable `NGINX_WORKER_OPEN_FILES`, e.g.:
 
 ```Dockerfile
-ENV NGINX_WORKER_OPEN_FILES 2048
+    ENV NGINX_WORKER_OPEN_FILES 2048
 ```
 
 ### Customizing Nginx additional configurations
@@ -611,175 +567,6 @@ include /etc/nginx/conf.d/*.conf;
 
 If you want to add a custom `/app/nginx.conf` file but don't know where to start from, you can use [the `nginx.conf` used for the tests](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/tests/test_02_app/custom_nginx_app/app/nginx.conf) and customize it or modify it further.
 
-## Technical details
-
-The combination of uWSGI with Nginx is a [common way to deploy Python Flask web applications](http://flask.pocoo.org/docs/1.0/deploying/uwsgi/).
-
-Roughly:
-
-* **Nginx** is a web server, it takes care of the HTTP connections and also can serve static files directly and more efficiently.
-
-* **uWSGI** is an application server, that's what runs your Python code and it talks with Nginx.
-
-* **Your Python code** has the actual **Flask** web application, and is run by uWSGI.
-
-The image [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/) takes advantage of already existing slim and optimized Docker images (based on Debian as [recommended by Docker](https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/)) and implements several of Docker's best practices.
-
-It uses the official Python Docker image, installs uWSGI and on top of that (with the least amount of modifications) adds the official Nginx image.
-
-And it controls all these processes with Supervisord.
-
-The image (and tags) created by this repo is based on the image [**tiangolo/uwsgi-nginx**](https://hub.docker.com/r/tiangolo/uwsgi-nginx/). This image adds Flask and sensible defaults on top of it.
-
-If you follow the instructions and keep the root directory `/app` in your container, with a file named `main.py` and a Flask object named `app` in it, it should "just work".
-
-There's already a `uwsgi.ini` file in the `/app` directory with the uWSGI configurations for it to "just work". And all the other required parameters are in another `uwsgi.ini` file in the image, inside `/etc/uwsgi/`.
-
-If you need to change the main file name or the main Flask object, you would have to provide your own `uwsgi.ini` file. You may use the one in this repo as a template to start with (and you only would have to change the 2 corresponding lines).
-
-You can have a `/app/static` directory and those files will be efficiently served by Nginx directly (without going through your Flask code or even uWSGI), it's already configured for you. But you can configure it further using environment variables (read above).
-
-Supervisord takes care of running uWSGI with the `uwsgi.ini` file in `/app` file (including also the file in `/etc/uwsgi/uwsgi.ini`) and starting Nginx.
-
----
-
-There's the rule of thumb that you should have "one process per container".
-
-That helps, for example, isolating an app and its database in different containers.
-
-But if you want to have a "micro-services" approach you may want to [have more than one process in one container](https://valdhaus.co/writings/docker-misconceptions/) if they are all related to the same "service", and you may want to include your Flask code, uWSGI and Nginx in the same container (and maybe run another container with your database).
-
-That's the approach taken in this image.
-
----
-
-This image (and tags) have some default files, so if you run it by itself (not as the base image of your own project) you will see a default "Hello World" web app.
-
-When you build a `Dockerfile` with a `COPY ./app /app` you replace those default files with your app code.
-
-The main default file is only in `/app/main.py`. And in the case of the tags with `-index`, also in `/app/static/index.html`.
-
-But those files render a "(default)" text in the served web page, so that you can check if you are seeing the default code or your own code overriding the default.
-
-Your app code should be in the container's `/app` directory, it should have a `main.py` file and that `main.py` file should have a Flask object `app`.
-
-If you follow the instructions above or use one of the downloadable example templates, you should be OK.
-
-There is also a `/app/uwsgi.ini` file inside the images with the default parameters for uWSGI.
-
-The downloadable examples include a copy of the same `uwsgi.ini` file for debugging purposes. To learn more, read the "**Advanced development instructions**" below.
-
-## Advanced development instructions
-
-While developing, you might want to make your code directory a volume in your Docker container.
-
-With that you would have your files (temporarily) updated every time you modify them, without needing to build your container again.
-
-To do this, you can use the command `pwd` (print working directory) inside your `docker run` and the flag `-v` for volumes.
-
-With that you could map your `./app` directory to your container's `/app` directory.
-
-But first, as you will be completely replacing the directory `/app` in your container (and all of its contents) you will need to have a `uwsgi.ini` file in your `./app` directory with:
-
-```ini
-[uwsgi]
-module = main
-callable = app
-```
-
-and then you can do the Docker volume mapping.
-
-**Note**: A `uwsgi.ini` file is included in the downloadable examples.
-
-* To try it, go to your project directory (the one with your `Dockerfile` and your `./app` directory)
-* Make sure you have a `uwsgi.ini` file in your `./app` directory
-* Build your Docker image:
-
-```bash
-docker build -t myimage .
-```
-
-* Run a container based on your image, mapping your code directory (`./app`) to your container's `/app` directory:
-
-```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app myimage
-```
-
-If you go to your Docker container URL you should see your app, and you should be able to modify files in `./app/static/` and see those changes reflected in your browser just by reloading.
-
-...but, as uWSGI loads your whole Python Flask web application once it starts, you won't be able to edit your Python Flask code and see the changes reflected.
-
-To be able to (temporarily) debug your Python Flask code live, you can run your container overriding the default command (that starts Supervisord which in turn starts uWSGI and Nginx) and run your application directly with `python`, in debug mode, using the `flask` command with its environment variables.
-
-So, with all the modifications above and making your app run directly with `flask`, the final Docker command would be:
-
- ```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=80
-```
-
-Or in the case of a package project, you would set `FLASK_APP=main/main.py`:
-
-```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage flask run --host=0.0.0.0 --port=80
-```
-
-Now you can edit your Flask code in your local machine and once you refresh your browser, you will see the changes live.
-
-Remember that you should use this only for debugging and development, for deployment in production you shouldn't mount volumes and you should let Supervisord start and let it start uWSGI and Nginx (which is what happens by default).
-
-An alternative for these last steps to work when you don't have a package, but just a flat structure with single files (modules), your Python Flask code could have that section with:
-
-```python
-if __name__ == "__main__":
-   # Only for debugging while developing
-   app.run(host='0.0.0.0', debug=True, port=80)
-```
-
-...and you could run it with `python main.py`. But that will only work when you are not using a package structure and don't plan to do it later. In that specific case, if you didn't add the code block above, your app would only listen to `localhost` (inside the container), in another port (5000) and not in debug mode.
-
-**Note**: The example project **example-flask-python3.8** includes a `docker-compose.yml` and `docker-compose.override.yml` with all these configurations, if you are using Docker Compose.
-
----
-
-Also, if you want to do the same live debugging using the environment variable `STATIC_INDEX=1` (to serve `/app/static/index.html` directly when requested for `/`) your Nginx won't serve it directly as it won't be running (only your Python Flask app in debug mode will be running).
-
-```python
-from flask import Flask, send_file
-```
-
-and
-
-```python
-@app.route('/')
-def route_root():
-    index_path = os.path.join(app.static_folder, 'index.html')
-    return send_file(index_path)
-```
-
-...that makes sure your app also serves the `/app/static/index.html` file when requested for `/`. Or if you are using a package structure, the `/app/main/static/index.html` file.
-
-And if you are using a SPA framework, to allow it to handle the URLs in the browser, your Python Flask code should have the section with:
-
-```python
-# Everything not declared before (not a Flask route / API endpoint)...
-@app.route('/<path:path>')
-def route_frontend(path):
-    # ...could be a static file needed by the front end that
-    # doesn't use the `static` path (like in `<script src="bundle.js">`)
-    file_path = os.path.join(app.static_folder, path)
-    if os.path.isfile(file_path):
-        return send_file(file_path)
-    # ...or should be handled by the SPA's "router" in front end
-    else:
-        index_path = os.path.join(app.static_folder, 'index.html')
-        return send_file(index_path)
-```
-
-...that makes Flask send all the CSS, JavaScript and image files when requested in the root (`/`) URL but also makes sure that your frontend SPA handles all the other URLs that are not defined in your Flask app.
-
-That's how it is written in the tutorial above and is included in the downloadable examples.
-
-**Note**: The example project **example-flask-python3.8-index** includes a `docker-compose.yml` and `docker-compose.override.yml` with all these configurations, if you are using Docker Compose.
 
 ## More advanced development instructions
 
@@ -823,3 +610,9 @@ You will see your Flask debugging server start, you will see how it sends respon
 ## License
 
 This project is licensed under the terms of the Apache license.
+
+As with all Docker images, these likely also contain other software which may be under other licenses (such as Bash, etc from the base distribution, along with any direct or indirect dependencies of the primary software being contained).
+
+Some additional license information which was able to be auto-detected might be found in [the `repo-info` repository's `ubuntu/` directory](https://github.com/docker-library/repo-info/tree/master/repos/ubuntu).
+
+As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.
