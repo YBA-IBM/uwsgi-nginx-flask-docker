@@ -565,47 +565,6 @@ It also means that it won't use additional configurations from files in `/etc/ng
 include /etc/nginx/conf.d/*.conf;
 ```
 
-If you want to add a custom `/app/nginx.conf` file but don't know where to start from, you can use [the `nginx.conf` used for the tests](https://github.com/tiangolo/uwsgi-nginx-flask-docker/blob/master/tests/test_02_app/custom_nginx_app/app/nginx.conf) and customize it or modify it further.
-
-
-## More advanced development instructions
-
-If you follow the instructions above, it's probable that at some point, you will write code that will break your Flask debugging server and it will crash.
-
-And since the only process running was your debugging server, that now is stopped, your container will stop.
-
-Then you will have to start your container again after fixing your code and you won't see very easily what is the error that is crashing your server.
-
-So, while developing, you could do the following (that's what I normally do, although I do it with Docker Compose, as in the example projects):
-
-* Make your container run and keep it alive in an infinite loop (without running any server):
-
-```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
-```
-
-* Or, if your project is a package, set `FLASK_APP=main/main.py`:
-
-```bash
-docker run -d --name mycontainer -p 80:80 -v $(pwd)/app:/app -e FLASK_APP=main/main.py -e FLASK_DEBUG=1 myimage bash -c "while true ; do sleep 10 ; done"
-```
-
-* Connect to your container with a new interactive session:
-
-```bash
-docker exec -it mycontainer bash
-```
-
-You will now be inside your container in the `/app` directory.
-
-* Now, from inside the container, run your Flask debugging server:
-
-```bash
-flask run --host=0.0.0.0 --port=80
-```
-
-You will see your Flask debugging server start, you will see how it sends responses to every request, you will see the errors thrown when you break your code, and how they stop your server, and you will be able to re-start it very fast, by just running the command above again.
-
 
 ## License
 
