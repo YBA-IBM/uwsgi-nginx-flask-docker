@@ -1,4 +1,4 @@
-FROM icr.io/ibmz/python:3.9
+FROM quay.io/ibm/python:3.9
 
 RUN pip install flask
 
