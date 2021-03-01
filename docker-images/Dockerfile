@@ -1,6 +1,4 @@
-FROM quay.io/ibmz/python:3.9
-
-LABEL maintainer="Sebastian Ramirez <tiangolo@gmail.com>"
+FROM icr.io/ibmz/python:3.9
 
 RUN pip install flask
 
@@ -25,6 +23,7 @@ ENV PYTHONPATH=/app
 RUN pwd && ls
 RUN ls ../
 RUN mv entrypoint.sh /uwsgi-nginx-entrypoint.sh
+RUN chmod +x /uswgi-nginx-entrypoint.sh
 #RUN mv /entrypoint.sh /uwsgi-nginx-entrypoint.sh
 # Copy the entrypoint that will generate Nginx additional configs
 COPY entrypoint.sh /entrypoint.sh
